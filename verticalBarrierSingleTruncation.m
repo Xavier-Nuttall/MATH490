@@ -18,9 +18,9 @@ alpha = frequency^2/gravity;
 % epsilon = 1e-6;
 
 
-maveNumbers = dispersion_free_surface(alpha, truncation-1, maxDepth) * 1i;
+waveNumbers = dispersion_free_surface(alpha, truncation-1, maxDepth) * 1i;
 
-maveNumbers(1) = -maveNumbers(1);
+waveNumbers(1) = -waveNumbers(1);
 
 
 weights = eye(colocationPointCount) * 2 * (barrierDepth)/(colocationPointCount-1);
@@ -31,21 +31,21 @@ weights(end,end) = weights(end,end)/2;
 
 kernel = zeros(colocationPointCount);
 
-kernel = getKernel(maveNumbers, colocationPoints, maxDepth, colocationPointCount, barrierDepth, kernel);
+kernel = getKernel(waveNumbers, colocationPoints, maxDepth, colocationPointCount, barrierDepth, kernel);
 
-u = (weights * kernel) \ f(A(1), colocationPoints, maveNumbers(1), maxDepth)';
+u = (weights * kernel) \ f(A(1), colocationPoints, waveNumbers(1), maxDepth)';
 diag_u = diag(u);
 
 
 % Calculate coefficents for phi-
 B = A - sum(( ...
-    weights * diag(u) * phi(colocationPoints, maveNumbers', maxDepth)' ...
+    weights * diag(u) * phi(colocationPoints, waveNumbers', maxDepth)' ...
     ...
     ))';
 
 % Calculate coefficients for phi+
 C = D + sum(( ...
-    weights * diag(u) * phi(colocationPoints, maveNumbers', maxDepth)' ...
+    weights * diag(u) * phi(colocationPoints, waveNumbers', maxDepth)' ...
     ...
     ))';
 
@@ -61,47 +61,49 @@ fprintf("Difference phi+ and phi- along x=0 with truncation %d: %d\n", truncatio
 % bZeros(truncation/25) = B(1);
 % cZeros(truncation/25) = C(1);
 
-values = zeros(size(25:25:2000));
-bZeros = zeros(size(25:25:2000));
-cZeros = zeros(size(25:25:2000));
+values = zeros(truncation);
+bZeros = zeros(truncation);
+cZeros = zeros(truncation);
 
-uCorrect = phi(colocationPoints, maveNumbers', maxDepth) * A(1);
+uCorrect = A(1) * cosh(waveNumbers(1) *(colocationPoints + maxDepth));
 
+size(u)
+size(uCorrect)
 difference = abs(uCorrect - u);
 
 
 
-function output = phi_norm_square(maveNumbers, maxDepth, barrierDepth) %#ok<INUSD>
+function output = phi_norm_square(waveNumbers, maxDepth, barrierDepth) %#ok<INUSD>
     output = (...
-        sinh(maveNumbers * maxDepth) ...
-            ./ (2 * maveNumbers)... 
+        sinh(waveNumbers * maxDepth) ...
+            ./ (2 * waveNumbers)... 
         );
 end
 
 
 
-function output = phi(z,maveNumbers, maxDepth)
-    output = cosh(maveNumbers*(z + maxDepth));
+function output = phi(z,waveNumbers, maxDepth)
+    output = cosh(waveNumbers*(z + maxDepth));
 end
 
-function output = f(A, z, maveNumbers, maxDepth)
-    output = A * phi(z, maveNumbers, maxDepth);
+function output = f(A, z, waveNumbers, maxDepth)
+    output = A * phi(z, waveNumbers, maxDepth);
 end
 
-function output = K(z, xi, maveNumbers, maxDepth, barrierDepth)
+function output = K(z, xi, waveNumbers, maxDepth, barrierDepth)
     output = sum( ...
-        phi(z,maveNumbers, maxDepth) .* phi(xi,maveNumbers, maxDepth) ...
+        phi(z,waveNumbers, maxDepth) .* phi(xi,waveNumbers, maxDepth) ...
         ./ ...
-        (phi_norm_square(maveNumbers, maxDepth, barrierDepth) * 1i .* maveNumbers) ...
+        (phi_norm_square(waveNumbers, maxDepth, barrierDepth) * 1i .* waveNumbers) ...
         )/maxDepth;
 end
 
-function output = getKernel(maveNumbers, colocationPoints, maxDepth, colocationPointCount, barrierDepth, previous)
+function output = getKernel(waveNumbers, colocationPoints, maxDepth, colocationPointCount, barrierDepth, previous)
     output = previous;
     for i = 1:colocationPointCount
     
         for j = 1:colocationPointCount
-            output(i,j) = output(i,j) +  K(colocationPoints(i), colocationPoints(j), maveNumbers, maxDepth, barrierDepth);
+            output(i,j) = output(i,j) +  K(colocationPoints(i), colocationPoints(j), waveNumbers, maxDepth, barrierDepth);
         end
     end
 end
