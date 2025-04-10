@@ -55,7 +55,7 @@ end
 kFirst = K(-20,-20, waveNumbers, maxDepth, barrierDepth);
 %%
 
-%% Calculating u 
+%% Calculating u and kernel
 kernel = zeros(colocationPointCount);
 
 kernel = getKernel(waveNumbers, colocationPoints, maxDepth, colocationPointCount, barrierDepth, kernel);
@@ -65,6 +65,10 @@ functionValue = f(A(1), colocationPoints, waveNumbers(1), maxDepth);
 u = (weights * kernel) \ functionValue;
 
 diagU = diag(u);
+%%
+
+%% Weights x kernel should be identity
+kernelDifference = weights * kernel - eye(colocationPointCount);
 %%
 
 %% Calculate coefficients for B and C
