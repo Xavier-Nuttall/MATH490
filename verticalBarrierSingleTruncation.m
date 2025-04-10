@@ -1,7 +1,7 @@
-truncation = 4;
-colocationPointCount = 3;
+truncation = 500;
+colocationPointCount = 250;
 maxDepth = 40;
-barrierDepth = 40;
+barrierDepth = 0.1;
 
 
 A = zeros(1, truncation).';
@@ -97,12 +97,12 @@ difference = abs(uCorrect - u);
 
 
 function output = phi_norm_square(waveNumbers, maxDepth, barrierDepth) %#ok<INUSD>
-    N = cosh(waveNumbers * maxDepth);
+    N = cosh(waveNumbers * maxDepth)  * abs(maxDepth);
     
     output = (...
-        sinh(waveNumbers * maxDepth) ...
+        maxDepth + sinh(2 * waveNumbers * maxDepth) ...
             ./ (2 * waveNumbers)... 
-        ) ...
+        ) /2 ...
         ./(N.^2);
 end
 
@@ -110,7 +110,8 @@ end
 
 function output = phi(z,waveNumbers, maxDepth)
     % normalisation constant
-    N = cosh(waveNumbers * maxDepth);
+    N = cosh(waveNumbers * maxDepth) * abs(maxDepth);
+
     output = cosh((z + maxDepth) * waveNumbers) ... 
     ./ N;
 end
