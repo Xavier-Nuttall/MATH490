@@ -126,7 +126,12 @@ function output = phi_norm_square(waveNumbers, maxDepth, barrierDepth) %#ok<INUS
         ./(N.^2);
 end
 
+function output = getKernel2(waveNumbers, colocationPoints, maxDepth, barrierDepth)
+    Phi = phi(colocationPoints, waveNumbers, maxDepth);
+    K = phi_norm_square(waveNumbers, maxDepth, barrierDepth) .* 1i .* waveNumbers;
 
+    output = Phi * K * Phi.';
+end
 
 function output = phi(z,waveNumbers, maxDepth)
     % normalisation constant
