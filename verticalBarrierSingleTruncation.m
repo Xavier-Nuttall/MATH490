@@ -94,7 +94,7 @@ values = zeros(truncation);
 bZeros = zeros(truncation);
 cZeros = zeros(truncation);
 
-uCorrect = A(1) * waveNumbers(1) * 1i *  cosh(waveNumbers(1) *(colocationPoints + maxDepth))/cosh(waveNumbers(1) * maxDepth);
+uCorrect = A(1) * waveNumbers(1) * 1i * cosh(waveNumbers(1) * (colocationPoints + maxDepth))/cosh(waveNumbers(1) * maxDepth);
 
 difference = uCorrect - u;
 
@@ -116,7 +116,7 @@ function output = getKernel(waveNumbers, colocationPoints, maxDepth, barrierDept
     Phi = phi(colocationPoints, waveNumbers, maxDepth);
     K = diag(1./(phi_norm_square(waveNumbers, maxDepth, barrierDepth) .* 1i .* waveNumbers));
 
-    output = Phi * K * Phi';
+    output = Phi * K * Phi.';
 end
 
 function output = phi(z,waveNumbers, maxDepth)
