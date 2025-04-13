@@ -103,7 +103,7 @@ values = zeros(truncation);
 bZeros = zeros(truncation);
 cZeros = zeros(truncation);
 
-uCorrect = A(1) * cosh(waveNumbers(1) *(colocationPoints + maxDepth))/cosh(waveNumbers(1) * maxDepth);
+uCorrect = A(1) * waveNumbers(1) * 1i *  cosh(waveNumbers(1) *(colocationPoints + maxDepth))/cosh(waveNumbers(1) * maxDepth);
 
 difference = uCorrect - u;
 
