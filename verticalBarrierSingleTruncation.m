@@ -1,8 +1,10 @@
 %% Parameters
 truncation = 1000;
-colocationPointCount = 1000;
-maxDepth = 40;
-barrierDepth = 40;
+
+
+colocationPointCount = 200;
+maxDepth = 20;
+barrierDepth = 5;
 
 
 A = zeros(1, truncation).';
@@ -17,11 +19,12 @@ alpha = frequency^2/gravity;
 %%
 
 waveNumbers = dispersion_free_surface(alpha, truncation-1, maxDepth) * 1i;
-
 waveNumbers(1) = -waveNumbers(1);
 
-weights = eye(colocationPointCount) * (barrierDepth)/(colocationPointCount-1);
 colocationPoints = linspace(-barrierDepth, 0, colocationPointCount).';
+
+deltaZ = colocationPoints(2) - colocationPoints(1);
+weights = eye(colocationPointCount) * deltaZ;
 
 weights(1,1) = weights(1,1)/2;
 weights(end,end) = weights(end,end)/2;
@@ -53,28 +56,17 @@ toc
 
 functionValue = f(A(1), colocationPoints, waveNumbers(1), maxDepth);
 
-u = (weights * kernel) \ functionValue;
+u = (kernel * weights) \ functionValue;
 
-diagU = diag(u);
-%%
-
-%% Weights x kernel should be identity
-kernelDifference = weights * kernel - eye(colocationPointCount);
 %%
 
 %% Calculate qcoefficients for B and C
 
 % Calculate coefficents for phi-
-B = A - sum(( ...
-    weights * diagU * phi(colocationPoints, waveNumbers, maxDepth) ...
-    ...
-    )).';
+B = A - diag(1./(1i * waveNumbers .* phi_norm_square(waveNumbers, maxDepth, barrierDepth))) * phi(colocationPoints, waveNumbers, maxDepth).' * weights * u; 
 
 % Calculate coefficients for phi+
-C = D + sum(( ...
-    weights * diagU * phi(colocationPoints, waveNumbers, maxDepth) ...
-    ...
-    )).';
+C = D + diag(1./(1i * waveNumbers .* phi_norm_square(waveNumbers, maxDepth, barrierDepth))) * phi(colocationPoints, waveNumbers, maxDepth).' * weights * u;
 %%
 
 %% Printouts
@@ -84,32 +76,17 @@ fprintf("Energy Conservation for truncation %d: |%d|^2 + |%d|^2 - |%d|^2 =  %d\n
 
 fprintf("Difference phi+ and phi- along x=0 with truncation %d: %d\n", truncation, sum(A) - sum(B) - sum(C))
 
-% Save to values
-% values(truncation/25) = abs(B(1)) + abs(C(1)) - abs(A(1));
-% bZeros(truncation/25) = B(1);
-% cZeros(truncation/25) = C(1);
-%%
-
 values = zeros(truncation);
 bZeros = zeros(truncation);
 cZeros = zeros(truncation);
 
-uCorrect = A(1) * waveNumbers(1) * 1i * cosh(waveNumbers(1) * (colocationPoints + maxDepth))/cosh(waveNumbers(1) * maxDepth);
-
-difference = uCorrect - u;
-
-
 %% Functions
 function output = phi_norm_square(waveNumbers, maxDepth, barrierDepth) %#ok<INUSD>
-
-    % normalisation constant
-    N = cosh(waveNumbers * maxDepth);
 
     output = (...
         maxDepth + sinh(2 * waveNumbers * maxDepth) ...
             ./ (2 * waveNumbers)... 
-        ) /2 ...
-        ./(N.^2);
+        ) /2;
 end
 
 function output = getKernel(waveNumbers, colocationPoints, maxDepth, barrierDepth)
@@ -120,11 +97,7 @@ function output = getKernel(waveNumbers, colocationPoints, maxDepth, barrierDept
 end
 
 function output = phi(z,waveNumbers, maxDepth)
-    % normalisation constant
-    N = cosh(waveNumbers * maxDepth);
-
-    output = cosh((z + maxDepth) * waveNumbers) ... 
-    ./ N;
+    output = cosh((z + maxDepth) * waveNumbers);
 end
 
 function output = f(A, z, waveNumbers, maxDepth)
