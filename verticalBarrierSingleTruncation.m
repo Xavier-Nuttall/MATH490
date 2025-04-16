@@ -1,14 +1,14 @@
 %% Parameters
 truncation = 1000;
-
+modeTruncation = 10;
 
 colocationPointCount = 200;
 maxDepth = 20;
 barrierDepth = 5;
 
 
-A = zeros(1, truncation).';
-D = zeros(1, truncation).';
+A = zeros(1, modeTruncation).';
+D = zeros(1, modeTruncation).';
 A(1) = 1;
 
 
@@ -20,6 +20,7 @@ alpha = frequency^2/gravity;
 
 waveNumbers = dispersion_free_surface(alpha, truncation-1, maxDepth) * 1i;
 waveNumbers(1) = -waveNumbers(1);
+reducedWaveNumbers = waveNumbers(1:modeTruncation);
 
 colocationPoints = linspace(-barrierDepth, 0, colocationPointCount).';
 
@@ -63,10 +64,10 @@ u = (kernel * weights) \ functionValue;
 %% Calculate qcoefficients for B and C
 
 % Calculate coefficents for phi-
-B = A - diag(1./(1i * waveNumbers .* phi_norm_square(waveNumbers, maxDepth, barrierDepth))) * phi(colocationPoints, waveNumbers, maxDepth).' * weights * u; 
+B = A - diag(1./(1i * reducedWaveNumbers .* phi_norm_square(reducedWaveNumbers, maxDepth, barrierDepth))) * phi(colocationPoints, reducedWaveNumbers, maxDepth).' * weights * u; 
 
 % Calculate coefficients for phi+
-C = D + diag(1./(1i * waveNumbers .* phi_norm_square(waveNumbers, maxDepth, barrierDepth))) * phi(colocationPoints, waveNumbers, maxDepth).' * weights * u;
+C = D + diag(1./(1i * reducedWaveNumbers .* phi_norm_square(reducedWaveNumbers, maxDepth, barrierDepth))) * phi(colocationPoints, reducedWaveNumbers, maxDepth).' * weights * u;
 %%
 
 %% Printouts
