@@ -172,3 +172,17 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+# Latex files
+*.out
+*.blg
+*.toc
+*.bbl
+*.aux
+*.pdf
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+!logo.pdf
+!bvp-figure.pdf
