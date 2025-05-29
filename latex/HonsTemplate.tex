@@ -63,29 +63,34 @@
 \setcounter{secnumdepth}{4}% 
 
 \chapter{Introduction}
-In recent years, there has been a growing interest in coastal protection strategies due to increased coastal erosion stemming from climate change and rising sea levels. A significant factor contributing to coastal erosion is the presence of \enquote{ocean gravity waves}, which will be referred to as \enquote{waves} throughout as in \cite{MosigJohannesErnstManfred2018Cwim}. One widely adopted method for coastal protection is the use of wave attenuation systems[cite...], designed to dissipate the energy of waves before they reach the coastline. One mechanism of attenuation is scattering, which involves redirecting wave energy away from the coastline. Modelling the scattering caused by these attenuation systems is crucial for understanding their effectiveness in reducing wave energy and protecting coastal areas.
+In recent years, there has been a growing interest in coastal protection strategies due to increased coastal erosion stemming from climate change and rising sea levels. A significant factor contributing to coastal erosion is the presence of \enquote{ocean gravity waves} with periods between 5-25s, which will be referred to as \enquote{waves} throughout, as in \cite{MosigJohannesErnstManfred2018Cwim}. One widely adopted method for coastal protection is the use of wave attenuation systems~\cite{cite...}, designed to dissipate the energy of waves before they reach the coastline. One mechanism of attenuation is scattering, which reflects and traps wave energy, thereby protecting coastal areas~\cite{Wilks_Montiel_Wakes_2022}. Modelling the scattering caused by these attenuation systems is crucial for understanding their effectiveness in reducing wave energy and protecting coastal regions.
 
-A significant body of research has been devoted to modelling wave scattering by surface-piercing barriers \cite{10.1093/imamat/35.3.339, PARSONS1994129, Porter1995ComplementaryAT}, submerged vertical barriers \cite{Porter1995ComplementaryAT} surface-piercing elastic barriers \cite{doi:10.1137/090756557}, horizontal floating elastic structures~\cite{MontielFabienFranck2012NaEA}, and submerged porous vertical barriers~\cite{VIJAY2020102206}. However, there is little research into scattering by submerged elastic vertical barriers \cite{elasticVerticalBerrier2013}. This report aims to build upon the existing literature on submerged elastic vertical barriers with a focus on ground standing barriers.
+A significant body of research has been devoted to modelling wave scattering by surface-piercing barriers~\cite{10.1093/imamat/35.3.339, PARSONS1994129, Porter1995ComplementaryAT}, submerged vertical barriers~\cite{Porter1995ComplementaryAT}, surface-piercing elastic barriers~\cite{doi:10.1137/090756557}, horizontal floating elastic structures~\cite{WU1995301, MontielFabienFranck2012NaEA}, and submerged porous vertical barriers~\cite{VIJAY2020102206}. However, there is little research into scattering by submerged elastic vertical barriers~\cite{elasticVerticalBerrier2013}. One frequently used approach when solving these scattering problems is the \enquote{eigenfunction matching method} also known as the \enquote{eigenfunction expansion-matching method} \cite{WU1995301, 10.1029/2007JC004434, 10.1093/imamat/35.3.339}. However, this method can be computationally expensive and may not be suited for problems with sharp singularities, such as those involving vertical barriers as shown in \cite{jmse13030398}. Another common approach are the galerkin methods, as used by \cite{Porter1995ComplementaryAT,10.1093/imamat/35.3.339,PARSONS1994129} in problems of rigid structures. This method was shown to be computationally more efficient than the eigenfunction matching method, for problems with sharp singularities like in those we are considering \cite{jmse13030398}. This approach is also commonly used in problems of flexible/elastic beams \cite{Lian2024}, a potentially similar problem to the one we are considering. 
+
+
+This work aims to build upon the existing literature on submerged elastic vertical barriers, with a focus on ground-standing barriers. To start with, we will consider the problem of rigid plates.
+
+
 
 \chapter{Rigid Vertical Barrier}
 \section{Mathematical Model}
 \label{sec:mathModel}
-We analyze the scattering of linear water waves by a submerged, bottom-standing vertical barrier located at the origin in a two-dimensional Cartesian coordinate system. The coordinate system is defined such that $x$ represents the direction of wave propagation, and $z$ denotes the vertical direction, positive upwards. The ?convention? of positive $x$ is right and negative $x$ left is adopted. We let the undisturbed water surface be at $z=0$, and the seabed is flat and horizontal at $z=-h$. A bottom-standing vertical barrier is placed at $x=0$ with the tip at $z=-d$ and the bottom at $z=-h$. 
+We consider the scattering of linear water waves by a submerged, bottom-standing vertical barrier located at $x=0$ in a two-dimensional Cartesian coordinate system. Here, $x$ denotes the horizontal direction of wave propagation (positive to the right), and $z$ is the vertical direction, positive upwards. The undisturbed free surface is at $z=0$, and the flat seabed is at $z=-h$. The vertical barrier extends from the seabed at $z=-h$ up to its tip at $z=-d$, so occupise space between $-h < z < -d$.
 
-To simplify this problem to apply classical linear water-wave thoery, assuming the wave height $\eta(x,t)$ is small relative to both the wavelength and the water depth, the free surface is approximated as $z=0$. The water is assumed to be inviscid, incompressible, and starts irrotational. The $x$ waves are assumed to be time-harmonic with angular frequency $\omega$. Thus the fluid remains irrotational. We impose a $z$-vertical no-flow condition at the seabed and a $x$-horizontal no-flow condition at the barrier. The velocity potential is defined as $\Phi(x,z,t)$, which from the time-harmonic assumption can be expressed as:
+To apply classical linear water-wave theory, we assume the wave amplitude $\eta(x,t)$ is small compared to both the wavelength and the water depth, allowing the free surface to be approximated by $z=0$. The fluid is taken to be inviscid, incompressible, and initially at irrotational, so the flow remains irrotational. The waves are assumed to be time-harmonic with angular frequency $\omega$. We impose a no-flow boundary condition at the seabed and a no-flow condition at the barrier. The velocity potential $\Phi(x,z,t)$, under the time-harmonic assumption, can be written as:
 
 \begin{equation}
 \label{eq:time-harmonic}
 \Phi(x,z,t) = \text{Re}(\phi(x,z)\exp(-i\omega t)).
 \end{equation}
-The spacial part of the velocity potential $\phi(x,z)$ satisfies the boundary value problem (BVP):
+The spacial velocity potential $\phi(x,z)$ satisfies the boundary value problem (BVP):
 \begin{align}
 \label{eq:irrotational}
 \nabla^2 \phi = 0,&  &&(x,z) \text{ not in the barrier}, \\
 \label{eq:noFlowGround}
 \partial_z \phi = 0,&  &&z = -h, \\
 \label{eq:freeSurface}
-\partial_z \phi = \frac{\omega^2}{g}\phi,&  &&z = 0, \\
+\partial_z \phi = -\frac{\omega^2}{g}\phi,&  &&z = 0, \\
 \label{eq:noFlowBarrier}
 \partial_x \phi= 0,&  &&x = 0, -d < z < -h.
 \end{align}
@@ -98,42 +103,47 @@ The spacial part of the velocity potential $\phi(x,z)$ satisfies the boundary va
 \end{figure}
 
 
-Where the condition at the free surface \ref{eq:freeSurface} is derived from a simplification of the Navier-Stokes equations at the kinematic boundary condition. We then decompose the problem domain into two simple subdomains: $L = \{(x, z) \in \mathbb{R}^2 \mid x \leq 0\}$ and $R = \{(x, z) \in \mathbb{R}^2 \mid x \geq 0\}$. The governing equations \ref{eq:irrotational} to \ref{eq:noFlowBarrier} remain unchanged in each subdomain, but we impose continuity conditions, of the velocity and $x$-horizontal potential above the barrier:
+The free surface condition (\ref{eq:freeSurface}) is the linearized kinematic boundary condition, derived from the non-stationary Bernoulli equation under the assumption of time-harmonic motion, with $g$ denoting the acceleration due to gravity~\cite{alma9938079562602711}. We partition the domain into two subdomains: $L = \{(x, z) \in \mathbb{R}^2 \mid x \leq 0\}$ (to the left of the barrier) and $R = \{(x, z) \in \mathbb{R}^2 \mid x \geq 0\}$ (to the right of the barrier). The governing equations (\ref{eq:irrotational}--\ref{eq:noFlowBarrier}) apply within each subdomain, while at the interface above the barrier ($x=0$, $-d < z < 0$), we enforce continuity of both the velocity potential and its $x$-derivative (velocity):
 \begin{align}
 \label{eq:phiEquality}
 \phi^- = \phi^+, &&  x=0, -d < z < -h,\\
 \label{eq:phiPartialEquality}
 \partial_x\phi^- = \partial_x\phi^+, &&  x=0, -d < z < -h.
 \end{align}
-Through separation of variables, we can express the general solution to the governing equations (\ref{eq:irrotational} to \ref{eq:noFlowBarrier}) as:
+By applying separation of variables, the general solution to the governing equations (\ref{eq:irrotational}--\ref{eq:noFlowBarrier}) can be expressed as:
 \begin{equation}
 \label{eq:phiGeneralDefinition}
 \phi(x,z) = \sum_{n=0}^{\infty} \big(\alpha_n\exp(ik_nx) + \beta_n\exp(-ik_nx)\big)\psi_n(z).
 \end{equation}
-Where $\alpha_n$ are the coefficients of the positive $x$ modes and $\beta_n$ are the coefficients of the negative $x$ modes, and 
+Here, $\alpha_n$ and $\beta_n$ are the amplitudes of the left and right-oriented modes respectively, $i = \sqrt{-1}$, and
 \begin{equation}
 \label{eq:psiDefinition}
     \psi_n(z) = \cosh(k_n(z+h)),
-\end{equation} are the vertical eigenfunction. With the wave numbers $k_n$ above (\ref{eq:psiDefinition} and \ref{eq:phiGeneralDefinition}) being the solutions to the dispersion relation:
-\begin{equation} 
-\label{eq:waveNumbers}
-\omega^2 = gk_n \tanh(k_nh)
 \end{equation}
-So letting $\phi^-$ and $\phi^+$ be the solutions in the left and right subdomains respectively, we express the general solution in each subdomain as:
+are the vertical orthogonal eigenfunctions. The wavenumbers $k_n$ in (\ref{eq:psiDefinition}) and (\ref{eq:phiGeneralDefinition}) are the (real and complex) roots of the linear dispersion relation:
+\begin{equation}
+\label{eq:waveNumbers}
+\omega^2 = gk_n \tanh(k_n h),
+\end{equation}
+where $g$ is the acceleration due to gravity and $h$ is the total water depth.
+
+Let $\phi^-(x,z)$ and $\phi^+(x,z)$ denote the velocity potentials in the $L$ and $R$ subdomains, respectively. The general solution in each subdomain can be expressed as:
 \begin{align}
 \label{eq:phiMinusDefinition}
-\phi^-(x,z) &= \sum_{n=0}^{\infty} \big(A_n\exp(ik_nx) + B_n\exp(-ik_nx)\big)\psi_n(z),\\
+\phi^-(x,z) &= \sum_{n=0}^{\infty} \left(A_n \exp(ik_n x) + B_n\exp(-ik_n x)\right)\psi_n(z),\\
 \label{eq:phiPlusDefinition}
-\phi^+(x,z) &= \sum_{n=0}^{\infty} \big(C_n\exp(ik_nx) + D_n\exp(-ik_nx)\big)\psi_n(z).
+\phi^+(x,z) &= \sum_{n=0}^{\infty} \left(C_n\exp(ik_n x)+ D_n\exp(-ik_n x)\right)\psi_n(z),
 \end{align}
-Where $A_0$ and $D_0$ are the amplitudes of the right and left propagating modes, and $B_n$ and $C_n$ are the coefficients for the reflected modes. We model only a single incident wave $A_0 = 1$, so $A_n = 0$ for all $n \geq 1$ and $D_n = 0$ for all $n$. An auxiliary function $u(z)$ is introduced above the barrier ensuring continuity between the domains [better explanation]: 
+where $A_0$ and $D_0$ correspond to the amplitudes of the left and right incident waves, respectively, and $B_n$ and $C_n$ are the coefficients for the reflected and transmitted modes. For the case of a single incident wave propagating from the left, we set $A_0 = 1$, $A_n = 0$ for $n \geq 1$, and $D_n = 0$ for all $n$. 
+
+To enforce continuity of the horizontal velocity across the interface above the barrier ($x=0$, $-d < z < 0$), we introduce an auxiliary function $u(z)$ defined by
 \begin{equation}
 \label{eq:auxDefinition}
-u(z) = \partial_x\phi^- = \partial_x\phi^+.
+u(z) = \partial_x \phi^-(0,z) = \partial_x \phi^+(0,z).
 \end{equation}
-\section{Colocation}
-The goal of this method is for it to be an easy to understand baseline for which other more effective solutions and methods can be compared against.
-For the colocation method, we choose a set of evenly spaced collocation points $\{z_k\}_{k=0}^{M}$ in the interval $[-h, 0]$ where $z_k = -h + kh/M$ for $k = 0, 1, \ldots, M$. We then enforce that the residual error between the left and right subdomain solutions at the collocation points is zero. We truncate the infinite series in \ref{eq:phiMinusDefinition} and \ref{eq:phiPlusDefinition} to $N$ terms so we can perform numerical calculations.
+This function encapsulates the jump in the horizontal velocity at the interface between the two subdomains.
+\section{Collocation}
+The collocation method serves as a straightforward baseline against which more advanced or efficient methods can be compared. In this approach, we select a set of $M+1$ evenly spaced collocation points $\{z_k\}_{k=0}^{M}$ within the interval $[-h, 0]$, where $z_k = -h + k\frac{h}{M}$ for $k = 0, 1, \ldots, M$. At each collocation point, we enforce that the residual between the left and right subdomain solutions vanishes. For numerical computation, we truncate the infinite series in equations~\eqref{eq:phiMinusDefinition} and~\eqref{eq:phiPlusDefinition} to $N$ terms.
 Then applying \ref{eq:phiMinusDefinition} and \ref{eq:phiPlusDefinition} into the above (\ref{eq:auxDefinition}) we have:
 \begin{align}
 \label{eq:auxMinusEquality}
@@ -141,7 +151,7 @@ u(z) &= \sum_{n=0}^{N} \big(A_nik_n - B_nik_n\big)\psi_n(z),\\
 \label{eq:auxPlusEquality}
 &= \sum_{n=0}^{N} \big(C_nik_n - D_nik_n\big)\psi_n(z).
 \end{align}
-Now multiplying \ref{eq:auxMinusEquality} by $\psi_m(z)$ and integrating over $z$ from $-h$ to $0$, noting that $\int_{-h}^0\psi_m(\xi)\psi_n(\xi) d\xi = 0$ for $m\neq n$ by othogonality of $\psi_n$'s we the have:
+Now  we multiply \eqref{eq:auxMinusEquality} by $\psi_m(z)$ and integrate with respect to $z$ over the interval $[-h, 0]$. By the orthogonality of the eigenfunctions $\psi_n(z)$, $\int_{-h}^0 \psi_m(\xi)\psi_n(\xi) d\xi = 0$ for $m \neq n$, this yields:
 \begin{align}
 \label{eq:auxMinusIntegrate}
 U_m &= \int_{-h}^{0}\sum_{n=0}^{N} \big(A_nik_n - B_nik_n\big)\psi_n(\xi)\psi_m(\xi)d\xi,\nonumber\\
@@ -158,7 +168,11 @@ Using \ref{eq:auxMinusIntegrate}, \ref{eq:auxPlusIntegrate}, \ref{eq:phiEquality
 \label{eq:colocationSystem}
 \psi_0(z) = \int_{-d}^0 K(z,\xi) u(\xi) d\xi.
 \end{equation}
-Where $\displaystyle K(z,\xi) = \sum_{m=0}^{N} \frac{\psi_m(z)\psi_m(\xi)}{P_mik_m}$. Now we can apply a quadrature method to obtain a system of equations for which we use to solve for $u(z_k)$, here trapezoidal quadrature is used. These collocated auxilary values can then be used to solve for $U_m$, which we can then use in \ref{eq:auxMinusIntegrate} and \ref{eq:auxPlusIntegrate} to solve for the coefficients $B_n$ and $C_n$.
+Here, the kernel is given by
+\[
+K(z,\xi) = \sum_{m=0}^{N} \frac{\psi_m(z)\psi_m(\xi)}{P_m i k_m}.
+\]
+We now discretize the integral equation~\eqref{eq:colocationSystem} by a numerical quadrature rule such as the trapezoidal rule at the collocation points $\{z_k\}$. This yields a linear system for the unknown values $u(z_k)$. Once these auxiliary values are computed, we can approximate $U_m$ and subsequently use equations~\eqref{eq:auxMinusIntegrate} and~\eqref{eq:auxPlusIntegrate} to solve for the coefficients $B_n$ and $C_n$.
 \subsection{Convergence Analysis}
 
 
@@ -193,8 +207,6 @@ and the closed form solution \cite{bateman1954} to the $V_{m,j}$ integrals,
 \label{eq:VIntegral}
 V_{m,j} = \int_{-d}^{0} \phi_m(z) v_j(z) dz = (-1)^j \frac{\pi}{2} J_{2j}(ik_m(h-d)).
 \end{equation}
-
-\subsection{Convergence}
          
 %\clearpage
 \addcontentsline{toc}{chapter}{Bibliography}
